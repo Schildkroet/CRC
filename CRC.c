@@ -43,152 +43,143 @@ static uint32_t CRC_ReverseBitOrder32(uint32_t value);
 #endif
 
 
-
 void CRC_Init(void)
 {
-	CRC_CalculateCRC8Table();
-	CRC_CalculateCRC16Table();
-	CRC_CalculateCRC32Table();
+    CRC_CalculateCRC8Table();
+    CRC_CalculateCRC16Table();
+    CRC_CalculateCRC32Table();
 }
 
 
 uint8_t CRC_CalculateCRC8(const uint8_t *Buffer, uint8_t Length)
 {
-	uint8_t retVal = 0u;
-	uint8_t byteIndex = 0u;
+    uint8_t retVal = 0u;
+    uint8_t byteIndex = 0u;
 
 
-	if(Buffer != NULL)
+    if (Buffer != NULL)
     {
 #if (CRC_8_MODE == RUNTTIME)
-		uint8_t bitIndex = 0u;
+        uint8_t bitIndex = 0u;
+        retVal = CRC_8_INIT_VALUE;
 
-		retVal = CRC_8_INIT_VALUE;
-
-		/* Do calculation procedure for each byte */
-		for(byteIndex = 0u; byteIndex < Length; byteIndex++)
+        /* Do calculation procedure for each byte */
+        for (byteIndex = 0u; byteIndex < Length; byteIndex++)
         {
-			/* XOR new byte with temp result */
-			retVal ^= (Buffer[byteIndex] << (CRC_8_RESULT_WIDTH - 8u));
-
-			/* Do calculation for current data */
-			for(bitIndex = 0u; bitIndex < 8u; bitIndex++)
+            /* XOR new byte with temp result */
+            retVal ^= (Buffer[byteIndex] << (CRC_8_RESULT_WIDTH - 8u));
+            /* Do calculation for current data */
+            for (bitIndex = 0u; bitIndex < 8u; bitIndex++)
             {
-				if(retVal & (1u << (CRC_8_RESULT_WIDTH - 1u)))
+                if (retVal & (1u << (CRC_8_RESULT_WIDTH - 1u)))
                 {
-					retVal = (retVal << 1u) ^ CRC_8_POLYNOMIAL;
-				}
-				else
+                    retVal = (retVal << 1u) ^ CRC_8_POLYNOMIAL;
+                }
+                else
                 {
-					retVal = (retVal << 1u);
-				}
-			}
-		}
-
-		/* XOR result with specified value */
-		retVal ^= CRC_8_XOR_VALUE;
+                    retVal = (retVal << 1u);
+                }
+            }
+        }
+        /* XOR result with specified value */
+        retVal ^= CRC_8_XOR_VALUE;
 
 #elif (CRC_8_MODE == TABLE)
-		retVal = CRC_8_INIT_VALUE;
-
-		for(byteIndex = 0u; byteIndex < Length; byteIndex++)
-        {
-			retVal = CRC8Table[(retVal) ^ Buffer[byteIndex]];
-		}
-
-		/* XOR result with specified value */
-		retVal ^= CRC_8_XOR_VALUE;
+    retVal = CRC_8_INIT_VALUE;  
+    for (byteIndex = 0u; byteIndex < Length; byteIndex++)
+    {
+        retVal = CRC8Table[(retVal) ^ Buffer[byteIndex]];
+    }   
+    /* XOR result with specified value */
+    retVal ^= CRC_8_XOR_VALUE;
 
 #else
-		/* Mode not implemented */
-		retVal = 0x00u;
+    /* Mode not implemented */
+    retVal = 0x00u;
 
 #endif
-	}
-
-	return retVal;
+    }
+    return retVal;
 }
-
 
 uint16_t CRC_CalculateCRC16(const uint8_t *Buffer, uint8_t Length)
 {
-   uint16_t retVal = 0u;
-   uint8_t byteIndex = 0u;
+    uint16_t retVal = 0u;
+    uint8_t byteIndex = 0u;
 
 
-    if(Buffer != NULL)
+    if (Buffer != NULL)
     {
-#if (CRC_16_MODE==RUNTTIME)
-		retVal = CRC_16_INIT_VALUE;
+#if (CRC_16_MODE == RUNTTIME)
+        retVal = CRC_16_INIT_VALUE;
 
-		/* Do calculation procedure for each byte */
-		for(byteIndex = 0u; byteIndex < Length; byteIndex++)
+        /* Do calculation procedure for each byte */
+        for (byteIndex = 0u; byteIndex < Length; byteIndex++)
         {
-			/* XOR new byte with temp result */
-			retVal ^= (Buffer[byteIndex] << (CRC_16_RESULT_WIDTH - 8u));
+            /* XOR new byte with temp result */
+            retVal ^= (Buffer[byteIndex] << (CRC_16_RESULT_WIDTH - 8u));
 
             uint8_t bitIndex = 0u;
-			/* Do calculation for current data */
-			for(bitIndex = 0u; bitIndex < 8u; bitIndex++)
+            /* Do calculation for current data */
+            for (bitIndex = 0u; bitIndex < 8u; bitIndex++)
             {
-				if(retVal & (1u << (CRC_16_RESULT_WIDTH - 1u)))
+                if (retVal & (1u << (CRC_16_RESULT_WIDTH - 1u)))
                 {
-					retVal = (retVal << 1u) ^ CRC_16_POLYNOMIAL;
-				}
-				else
+                    retVal = (retVal << 1u) ^ CRC_16_POLYNOMIAL;
+                }
+                else
                 {
-					retVal = (retVal << 1u);
-				}
-			}
-		}
+                    retVal = (retVal << 1u);
+                }
+            }
+        }
 
-		/* XOR result with specified value */
-		retVal ^= CRC_16_XOR_VALUE;
+        /* XOR result with specified value */
+        retVal ^= CRC_16_XOR_VALUE;
 
-#elif (CRC_16_MODE==TABLE)
-		retVal = CRC_16_INIT_VALUE;
+#elif (CRC_16_MODE == TABLE)
+        retVal = CRC_16_INIT_VALUE;
 
-		/* Update the CRC using the data */
-		for(byteIndex = 0u; byteIndex < Length; byteIndex++)
+        /* Update the CRC using the data */
+        for (byteIndex = 0u; byteIndex < Length; byteIndex++)
         {
-			retVal = (retVal << 8u) ^ CRC16Table[(retVal >> 8u) ^ Buffer[byteIndex]];
-		}
+            retVal = (retVal << 8u) ^ CRC16Table[(retVal >> 8u) ^ Buffer[byteIndex]];
+        }
 
-		/* XOR result with specified value */
-		retVal ^= CRC_16_XOR_VALUE;
+        /* XOR result with specified value */
+        retVal ^= CRC_16_XOR_VALUE;
 #else
-		/* Mode not implemented */
-		retVal = 0x0000u;
+        /* Mode not implemented */
+        retVal = 0x0000u;
 
 #endif
-	}
+    }
 
-   return retVal;
+    return retVal;
 }
-
 
 uint32_t CRC_CalculateCRC32(const uint8_t *Buffer, uint8_t Length)
 {
-	uint32_t retVal = 0u;
-	uint8_t byteIndex = 0u;
+    uint32_t retVal = 0u;
+    uint8_t byteIndex = 0u;
 
 
-	if(Buffer != NULL)
+    if (Buffer != NULL)
     {
-#if (CRC_32_MODE==RUNTTIME)
-		retVal = CRC_32_INIT_VALUE;
+#if (CRC_32_MODE == RUNTTIME)
+        retVal = CRC_32_INIT_VALUE;
 
         /* Do calculation procedure for each byte */
-		for(byteIndex = 0u; byteIndex < Length; byteIndex++)
+        for (byteIndex = 0u; byteIndex < Length; byteIndex++)
         {
             /* XOR new byte with temp result */
             retVal ^= (CRC_ReverseBitOrder8(Buffer[byteIndex]) << (CRC_32_RESULT_WIDTH - 8u));
 
             uint8_t bitIndex = 0u;
             /* Do calculation for current data */
-			for(bitIndex = 0u; bitIndex < 8u; bitIndex++)
+            for (bitIndex = 0u; bitIndex < 8u; bitIndex++)
             {
-                if(retVal & (1u << (CRC_32_RESULT_WIDTH - 1u)))
+                if (retVal & (1u << (CRC_32_RESULT_WIDTH - 1u)))
                 {
                     retVal = (retVal << 1u) ^ CRC_32_POLYNOMIAL;
                 }
@@ -200,89 +191,89 @@ uint32_t CRC_CalculateCRC32(const uint8_t *Buffer, uint8_t Length)
         }
 
         /* XOR result with specified value */
-		retVal ^= CRC_32_XOR_VALUE;
+        retVal ^= CRC_32_XOR_VALUE;
 
-#elif (CRC_32_MODE==TABLE)
+#elif (CRC_32_MODE == TABLE)
         uint8_t data = 0u;
 
-		retVal = CRC_32_INIT_VALUE;
+        retVal = CRC_32_INIT_VALUE;
 
-		for(byteIndex = 0u; byteIndex < Length; ++byteIndex)
+        for (byteIndex = 0u; byteIndex < Length; ++byteIndex)
         {
             data = CRC_ReverseBitOrder8(Buffer[byteIndex]) ^ (retVal >> (CRC_32_RESULT_WIDTH - 8u));
             retVal = CRC32Table[data] ^ (retVal << 8u);
         }
 
-		/* XOR result with specified value */
-		retVal ^= CRC_32_XOR_VALUE;
+        /* XOR result with specified value */
+        retVal ^= CRC_32_XOR_VALUE;
 
 #else
-		/* Mode not implemented */
-		retVal = 0x00000000u;
+        /* Mode not implemented */
+        retVal = 0x00000000u;
 
 #endif
-	}
+    }
 
     /* Reflect result */
     retVal = CRC_ReverseBitOrder32(retVal);
 
-	return retVal;
+    return retVal;
 }
-
 
 static void CRC_CalculateCRC8Table(void)
 {
-#if (CRC_8_MODE==TABLE)
-	uint16_t i = 0u, j = 0u;
+#if (CRC_8_MODE == TABLE)
+    uint16_t i = 0u, j = 0u;
 
-	for(i = 0u; i < 256u; ++i)
-	{
-		uint8_t curr = i;
 
-		for(j = 0u; j < 8u; ++j)
-		{
-			if((curr & 0x80u) != 0u)
-			{
-				curr = (curr << 1u) ^ CRC_8_POLYNOMIAL;
-			}
-			else
-			{
-				curr <<= 1u;
-			}
-		}
+    for (i = 0u; i < 256u; ++i)
+    {
+        uint8_t curr = i;
 
-		CRC8Table[i] = curr;
-	}
+        for (j = 0u; j < 8u; ++j)
+        {
+            if ((curr & 0x80u) != 0u)
+            {
+                curr = (curr << 1u) ^ CRC_8_POLYNOMIAL;
+            }
+            else
+            {
+                curr <<= 1u;
+            }
+        }
+
+        CRC8Table[i] = curr;
+    }
 #endif
 }
-
 
 static void CRC_CalculateCRC16Table(void)
 {
 #if (CRC_16_MODE==TABLE)
-	uint16_t i = 0u, j = 0u;
-	uint16_t result = 0u;
-	uint16_t xor_flag = 0u;
+    uint16_t i = 0u, j = 0u;
+    uint16_t result = 0u;
+    uint16_t xor_flag = 0u;
 
-	for(i = 0u; i < 256u; i++)
-	{
-		result = i << 8u;
 
-		for(j = 0u; j < 8u; j++)
-		{
-			/* Flag for XOR if leftmost bit is set */
-			xor_flag = result & 0x8000u;
+    for(i = 0u; i < 256u; i++)
+    {
+        result = i << 8u;
 
-			/* Shift CRC */
-			result <<= 1u;
+        for(j = 0u; j < 8u; j++)
+        {
+            /* Flag for XOR if leftmost bit is set */
+            xor_flag = result & 0x8000u;
 
-			/* Perform the XOR */
-			if(xor_flag != 0u)
-				result ^= CRC_16_POLYNOMIAL;
-		}
+            /* Shift CRC */
+            result <<= 1u;
 
-		CRC16Table[i] = result;
-	}
+            /* Perform the XOR */
+            if(xor_flag != 0u)
+                result ^= CRC_16_POLYNOMIAL;
+        }
+
+        CRC16Table[i] = result;
+    }
 #endif
 }
 
@@ -291,6 +282,7 @@ static void CRC_CalculateCRC32Table(void)
 {
 #if (CRC_32_MODE==TABLE)
     uint32_t remainder = 0u;
+
 
     for(uint32_t dividend = 0u; dividend < 256u; ++dividend)
     {
