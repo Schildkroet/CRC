@@ -51,11 +51,10 @@ void CRC_Init(void)
 }
 
 
-uint8_t CRC_CalculateCRC8(const uint8_t *Buffer, uint8_t Length)
+uint8_t CRC_CalculateCRC8(const uint8_t *Buffer, uint16_t Length)
 {
     uint8_t retVal = 0u;
-    uint8_t byteIndex = 0u;
-
+    uint16_t byteIndex = 0u;
 
     if (Buffer != NULL)
     {
@@ -99,14 +98,15 @@ uint8_t CRC_CalculateCRC8(const uint8_t *Buffer, uint8_t Length)
 
 #endif
     }
+
     return retVal;
 }
 
-uint16_t CRC_CalculateCRC16(const uint8_t *Buffer, uint8_t Length)
+
+uint16_t CRC_CalculateCRC16(const uint8_t *Buffer, uint16_t Length)
 {
     uint16_t retVal = 0u;
-    uint8_t byteIndex = 0u;
-
+    uint16_t byteIndex = 0u;
 
     if (Buffer != NULL)
     {
@@ -158,11 +158,11 @@ uint16_t CRC_CalculateCRC16(const uint8_t *Buffer, uint8_t Length)
     return retVal;
 }
 
-uint32_t CRC_CalculateCRC32(const uint8_t *Buffer, uint8_t Length)
+
+uint32_t CRC_CalculateCRC32(const uint8_t *Buffer, uint16_t Length)
 {
     uint32_t retVal = 0u;
-    uint8_t byteIndex = 0u;
-
+    uint16_t byteIndex = 0u;
 
     if (Buffer != NULL)
     {
@@ -220,6 +220,7 @@ uint32_t CRC_CalculateCRC32(const uint8_t *Buffer, uint8_t Length)
     return retVal;
 }
 
+
 static void CRC_CalculateCRC8Table(void)
 {
 #if (CRC_8_MODE == TABLE)
@@ -246,6 +247,7 @@ static void CRC_CalculateCRC8Table(void)
     }
 #endif
 }
+
 
 static void CRC_CalculateCRC16Table(void)
 {

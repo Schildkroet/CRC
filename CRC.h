@@ -34,22 +34,21 @@ void CRC_Init(void);
  *
  * RETURN VALUE: 8 bit result of CRC calculation
  */
-uint8_t CRC_CalculateCRC8(const uint8_t *Buffer, uint8_t Length);
+uint8_t CRC_CalculateCRC8(const uint8_t *Buffer, uint16_t Length);
 
 /**
  * This function makes a CRC16 calculation on Length data bytes
  *
  * RETURN VALUE: 16 bit result of CRC calculation
  */
-uint16_t CRC_CalculateCRC16(const uint8_t *Buffer, uint8_t Length);
+uint16_t CRC_CalculateCRC16(const uint8_t *Buffer, uint16_t Length);
 
 /**
  * This function makes a CRC32 calculation on Length data bytes
  *
  * RETURN VALUE: 32 bit result of CRC calculation
  */
-uint32_t CRC_CalculateCRC32(const uint8_t *Buffer, uint8_t Length);
-
+uint32_t CRC_CalculateCRC32(const uint8_t *Buffer, uint16_t Length);
 
 #ifdef __cplusplus
 }
