@@ -17,6 +17,7 @@
 */
 #include <stdio.h>
 #include "CRC.h"
+#include "CRC_Cfg.h"
 
 
 //---- Prototypes ----//
